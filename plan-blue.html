@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>جدول التمارين الأسبوعي</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth}
+body{font-family:"Cairo","Segoe UI",Tahoma,"Noto Naskh Arabic",Arial,sans-serif;background:#000;color:#fff;padding:14px 8px 60px;line-height:1.5}
+.page{max-width:780px;margin:0 auto;border:1px solid #1f1f1f;border-radius:20px;padding:24px 14px 30px}
+h1.en{direction:ltr;text-align:center;color:#2F7BE8;font-size:30px;font-weight:500;letter-spacing:.5px}
+h1.ar{text-align:center;color:#fff;font-size:24px;font-weight:700;margin-top:10px}
+hr{border:0;border-top:2px solid #2F7BE8;margin:20px 0 14px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:6px}
+.btn{background:transparent;color:#fff;border:1px solid #2F7BE8;border-radius:10px;padding:6px 14px;font:inherit;font-size:14px;cursor:pointer}
+.btn:active{background:#2F7BE8}
+#status{text-align:center;font-size:13px;color:#9db7e8;margin:8px 0 2px}
+#status.warn{color:#f5c46b}
+nav{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin:10px 0 4px}
+nav a{color:#2F7BE8;text-decoration:none;font-size:14px}
+section.day{padding-top:26px;margin-top:22px;border-top:1px solid #222;scroll-margin-top:10px}
+section.day:first-of-type{border-top:none;margin-top:6px}
+.dayline{color:#2F7BE8;font-size:24px;margin-bottom:14px}
+.dayline b{font-weight:600}
+.mrow{display:flex;align-items:flex-end;gap:8px;margin:18px 0 8px}
+.mrow label{font-weight:700;font-size:17px;white-space:nowrap}
+input,textarea{background:transparent;color:#fff;-webkit-text-fill-color:#fff;caret-color:#fff;font:inherit;font-size:15px;border:0;border-bottom:1px solid #666;border-radius:0;outline:none;width:100%;padding:3px 2px}
+textarea{border:1px solid #555;border-radius:10px;padding:8px;resize:vertical;margin-top:6px}
+input:focus,textarea:focus{border-color:#2F7BE8}
+.mrow input{flex:1}
+table{width:100%;table-layout:fixed;border-collapse:collapse}
+th{color:#2F7BE8;font-weight:500;font-size:14px;text-align:right;padding:12px 3px;border-bottom:1px solid #333}
+th.c{text-align:center}
+th.n,td.n{width:8%;text-align:center}
+th:nth-child(2){width:33%}
+td{padding:10px 3px;border-bottom:1px solid #222;vertical-align:bottom}
+td.n{color:#fff}
+input.c{text-align:center}
+.notes{margin-top:22px}
+.notes label{font-weight:700;font-size:17px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,80px);background:#000;border:1px solid #2F7BE8;color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:9}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:480px){th{font-size:12.5px}input{font-size:14px}h1.en{font-size:26px}}
+
+#lock{position:fixed;inset:0;z-index:9999;background:#000000;display:flex;align-items:center;justify-content:center;padding:20px;font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif;color:#fff}
+#lock .box{width:100%;max-width:380px;background:#06101f;border:1px solid #2F7BE8;border-radius:18px;padding:28px 20px;text-align:center}
+#lock h2{font-size:22px;margin-bottom:8px;color:#2F7BE8}
+#lock p{font-size:14px;opacity:.85;margin-bottom:18px;line-height:1.7}
+#lock input{width:100%;padding:12px;border-radius:10px;border:1px solid #2F7BE8;background:#0B1A38;color:#fff;-webkit-text-fill-color:#fff;font-size:18px;text-align:center;letter-spacing:2px;direction:ltr;outline:none;text-transform:uppercase}
+#lock button{width:100%;margin-top:14px;padding:12px;border-radius:10px;border:1px solid #2F7BE8;background:#2F7BE8;color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+#lockmsg{min-height:22px;margin-top:12px;font-size:13px;color:#ffd7d7}
+</style>
+</head>
+<body>
+<div id="lock"><div class="box">
+<h2>🔒 أدخل كود التفعيل</h2>
+<p>الكود وصلك مع عملية الشراء. تدخله مرة واحدة فقط على هذا الهاتف.</p>
+<input id="lockinp" type="text" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters">
+<button id="lockbtn" type="button">تفعيل</button>
+<div id="lockmsg"></div>
+</div></div>
+<div class="page">
+<h1 class="en">GYM WORKOUT PLAN</h1>
+<h1 class="ar">جدول التمارين الأسبوعي</h1>
+<hr>
+<div class="tools">
+<button class="btn" onclick="saveAllData(true)">حفظ البيانات</button>
+<button class="btn" onclick="backupData()">نسخ احتياطي</button>
+<button class="btn" onclick="restoreData()">استعادة</button>
+<button class="btn" onclick="resetData()">إعادة ضبط</button>
+</div>
+<div id="status"></div>
+<nav><a href="#day-sat">السبت</a><a href="#day-sun">الأحد</a><a href="#day-mon">الاثنين</a><a href="#day-tue">الثلاثاء</a><a href="#day-wed">الأربعاء</a><a href="#day-thu">الخميس</a><a href="#day-fri">الجمعة</a></nav>
+<main id="days">
+<section id="day-sat" class="day">
+<div class="dayline"><span>اليوم:</span> <b>السبت</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="sat" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="sat" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="sat" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="sat" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="sat" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="sat" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="sat" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="sat" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="sat" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="sat" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sat" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="sat" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="sat" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="sat" data-field="notes"></textarea></div>
+</section>
+<section id="day-sun" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الأحد</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="sun" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="sun" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="sun" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="sun" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="sun" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="sun" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="sun" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="sun" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="sun" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="sun" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="sun" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="sun" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="sun" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="sun" data-field="notes"></textarea></div>
+</section>
+<section id="day-mon" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الاثنين</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="mon" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="mon" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="mon" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="mon" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="mon" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="mon" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="mon" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="mon" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="mon" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="mon" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="mon" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="mon" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="mon" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="mon" data-field="notes"></textarea></div>
+</section>
+<section id="day-tue" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الثلاثاء</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="tue" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="tue" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="tue" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="tue" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="tue" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="tue" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="tue" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="tue" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="tue" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="tue" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="tue" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="tue" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="tue" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="tue" data-field="notes"></textarea></div>
+</section>
+<section id="day-wed" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الأربعاء</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="wed" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="wed" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="wed" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="wed" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="wed" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="wed" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="wed" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="wed" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="wed" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="wed" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="wed" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="wed" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="wed" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="wed" data-field="notes"></textarea></div>
+</section>
+<section id="day-thu" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الخميس</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="thu" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="thu" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="thu" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="thu" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="thu" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="thu" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="thu" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="thu" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="thu" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="thu" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="thu" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="thu" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="thu" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="thu" data-field="notes"></textarea></div>
+</section>
+<section id="day-fri" class="day">
+<div class="dayline"><span>اليوم:</span> <b>الجمعة</b></div>
+<div class="mrow"><label>العضلة الأولى:</label><input class="" type="text" data-day="fri" data-field="muscle1" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="fri" data-field="m1_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="fri" data-field="m1_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="fri" data-field="m1_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="fri" data-field="m1_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m1_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>العضلة الثانية:</label><input class="" type="text" data-day="fri" data-field="muscle2" autocomplete="off"></div>
+<table><thead><tr><th class="n">#</th><th>اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th></tr></thead><tbody><tr><td class="n">1</td><td><input class="" type="text" data-day="fri" data-field="m2_ex_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_sets_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_reps_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_weight_1" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_rest_1" autocomplete="off"></td></tr><tr><td class="n">2</td><td><input class="" type="text" data-day="fri" data-field="m2_ex_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_sets_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_reps_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_weight_2" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_rest_2" autocomplete="off"></td></tr><tr><td class="n">3</td><td><input class="" type="text" data-day="fri" data-field="m2_ex_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_sets_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_reps_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_weight_3" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_rest_3" autocomplete="off"></td></tr><tr><td class="n">4</td><td><input class="" type="text" data-day="fri" data-field="m2_ex_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_sets_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_reps_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_weight_4" autocomplete="off"></td><td><input class="c" type="text" data-day="fri" data-field="m2_rest_4" autocomplete="off"></td></tr></tbody></table>
+<div class="mrow"><label>مدة الكارديو:</label><input class="" type="text" data-day="fri" data-field="cardioDuration" autocomplete="off"></div>
+<div class="mrow"><label>نوع الكارديو:</label><input class="" type="text" data-day="fri" data-field="cardioType" autocomplete="off"></div>
+<div class="notes"><label>ملاحظات اليوم:</label><textarea rows="3" data-day="fri" data-field="notes"></textarea></div>
+</section>
+</main>
+</div>
+<div id="toast"></div>
+<script>
+var KEY='gym_blue_black_data_v1';
+var memory=null, dbDoc=null, lsOk=false, timer=null;
+
+function collect(){
+  var o={},els=document.querySelectorAll('[data-day][data-field]');
+  for(var i=0;i<els.length;i++){
+    var d=els[i].getAttribute('data-day'),f=els[i].getAttribute('data-field');
+    (o[d]=o[d]||{})[f]=els[i].value;
+  }
+  return o;
+}
+function apply(raw){
+  try{
+    var data=JSON.parse(raw);
+    for(var d in data)for(var f in data[d]){
+      var el=document.querySelector('[data-day="'+d+'"][data-field="'+f+'"]');
+      if(el)el.value=data[d][f]||'';
+    }
+    return true;
+  }catch(e){return false}
+}
+function lsSet(json){
+  try{localStorage.setItem(KEY,json);return localStorage.getItem(KEY)===json}catch(e){return false}
+}
+function lsGet(){try{return localStorage.getItem(KEY)}catch(e){return null}}
+function setStatus(){
+  var s=document.getElementById('status');
+  if(dbDoc){s.className='';s.textContent='☁️ يُحفظ تلقائياً في حسابك (متاح من أي جهاز)'}
+  else if(lsOk){s.className='';s.textContent='💾 يُحفظ تلقائياً على هذا الجهاز'}
+  else{s.className='warn';s.textContent='⚠️ هذا التطبيق لا يدعم حفظ البيانات. استخدم زر "نسخ احتياطي" أو افتح الصفحة في متصفح Chrome'}
+}
+function pushCloud(json){
+  if(!dbDoc)return;
+  clearTimeout(timer);
+  timer=setTimeout(function(){dbDoc.set({json:json}).catch(function(){})},700);
+}
+function saveAllData(show){
+  var json=JSON.stringify(collect());
+  lsOk=lsSet(json);
+  if(!lsOk)memory=json;
+  pushCloud(json);
+  setStatus();
+  if(show)toast(dbDoc||lsOk?'تم حفظ البيانات بنجاح':'الحفظ غير مدعوم هنا، استخدم النسخ الاحتياطي');
+}
+function resetData(){
+  if(confirm('هل أنت متأكد من رغبتك في مسح كافة البيانات المسجلة؟')){
+    var els=document.querySelectorAll('[data-day][data-field]');
+    for(var i=0;i<els.length;i++)els[i].value='';
+    try{localStorage.removeItem(KEY)}catch(e){}
+    memory=null;
+    pushCloud(JSON.stringify(collect()));
+    toast('تم إعادة ضبط القالب');
+  }
+}
+function copyText(t){
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(t).then(function(){return true},function(){return false})}
+  }catch(e){}
+  try{
+    var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);
+    return Promise.resolve(ok);
+  }catch(e){return Promise.resolve(false)}
+}
+function backupData(){
+  var json=JSON.stringify(collect());
+  copyText(json).then(function(ok){
+    if(ok)toast('تم نسخ بياناتك. الصقها في ملاحظات هاتفك للاحتفاظ بها');
+    else window.prompt('انسخ هذا النص واحتفظ به:',json);
+  });
+}
+function restoreData(){
+  var t=window.prompt('الصق النسخة الاحتياطية هنا:');
+  if(!t)return;
+  if(apply(t.trim())){saveAllData(false);toast('تمت استعادة البيانات')}
+  else toast('النص غير صالح');
+}
+var tt;
+function toast(m){
+  var t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');clearTimeout(tt);
+  tt=setTimeout(function(){t.classList.remove('show')},2800);
+}
+function initCloud(){
+  if(!window.claude||!window.claude.use)return;
+  Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(r){
+    var db=r[0],user=r[1];
+    if(!db||!user)return;
+    return user.id().then(function(id){
+      if(!id)return;
+      var ref=db.collection('data/users/'+id).doc('tracker');
+      return ref.get().then(function(s){
+        var d=s.exists?s.data():null;
+        if(d&&d.json){apply(d.json);lsSet(d.json)}
+        else{ref.set({json:JSON.stringify(collect())}).catch(function(){})}
+        dbDoc=ref;setStatus();
+      });
+    });
+  }).catch(function(){});
+}
+(function(){
+  var raw=lsGet();
+  if(raw)apply(raw);
+  lsOk=lsSet(JSON.stringify(collect()));
+  setStatus();
+  var els=document.querySelectorAll('input,textarea');
+  for(var i=0;i<els.length;i++)els[i].addEventListener('input',function(){saveAllData(false)});
+  initCloud();
+})();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').then(function(){
+      return navigator.serviceWorker.ready;
+    }).then(function(){
+      return caches.open('gym-plan-v1').then(function(c){return c.add(location.href)});
+    }).catch(function(){});
+  });
+}
+
+(function(){
+  var HASHES=["93b850f1d19edba5703a5e5d691e9e8298f567db469a854ac2c062f510721c4a", "aca3e46ae426a57b2a91ea3ebb71d1152b3c31e9a8f99d2193ab8600c6d90965", "23ab48ce709000ecc5b4e4aca8d4152d2067f3b4025b21b794b3db6674cf7b7e", "e091cc6042fd68fc902dd34685432549fe6076f6597fb784f533ca893021d6aa", "f9a686cf801975b235b2233a9cbca7a9398d2666ed3ddaae8d48a23a5369577c", "e71f74d9a571160d29f744976ee57e2e16f878ce29f09c9d02a2fa66a8a580db", "26fa5e3aff1bb514b396f8b6adf315039d83a245beecf82cc6aa30f7d68e775c", "3517c6a68ecc5f6617254193c50194b3039412733b7772372c43ae065e55ff95", "a72e7f2379af64b13926dd9840959e3a108008d0bc987207986c420d94492de1", "f2bcabeea2de51593af0c4d9746b1a708038e2bbea0fab6355067846613ec250", "8b9d2d4ae0df6771b01a553b1d234b7ebeffdbb2cc6ee732898edf8cbc91203a", "4d08d39d94cfb713a2b711146ed2019bedb302ae498ebc407173dad361922739", "f854aa8bf292f73414a125e8cd40704d1cc728cd3187aa80a7d8a8a011fb85ff", "b011dbcfdb980aed5577df8a063b19bcd97c81207c2bd08fc8a9b87104a3fb60", "a8578642195088e81c7d3808d63160f82c4ae65636803e8d88f51398c1ff63b8", "75c4c98944c024d7d164f8bbc8808e205948b0d3b308593ea5bdbbc3015ea071", "2bb3b5471ab28d7b9dc198e36d9886eb20b7f13592d5f2139b82269e27d16a97", "a8cd9a7aa4aa38e44714542763c6b047e0abe676d80cdaabebd54c4f169c4350", "1ed79bc2fdaca67d95faf3c597a94f6a14a919ff88751fcc718e218160bdbfa5", "f10d23a855c8e80ec64d41d688ed8c0f3f9f3b2daf4ea09465a566806b12b412", "a4979abb7a360b38d5d3d6366d9b064c709b0ff81492e2aa1606a940e71dc6d3", "ea9d1ba4a990732f8303480d1f25b9bd8e5f0fa7adab43eea4f060cdd7517e53", "3f3d5400136f97e6709bdb291f31f20d6df5f71ce8bbfc0877b1b47e0cf599e5", "a0a156c9b8349d809091210457e6b6375805589997b6d2b25d41e04aa6aad6ad", "7ff379b6be261094a4ae455e285556d32151709649a02d244f48e477e5c1b885", "e2185003a5c0c1e1bfe308bf34c58f2dfc1db8026c122faddb595568e8926dbe", "e74fb17b3010d97583acfd791e545e6595a7e747ce83530542db680b431ce0ad", "883afedd98c13cf049fb3c0f6fd9125ed531b127679b853e6c6e0708c44cf545", "7eb1acf626e7e2dd107e635051d87c1a02d94fdb5ad90251962791038b2914e1", "8b1f5a0a537b00e17d4ed3d8fe0b404556f1e324a860ca5531aed22aa1d0553a", "641466db0bd7c57a6a2d9c12b1a6104fc752bec15fa3ab3b1e7c38a683a1fbe4", "098bd3295c5c0894a3b72398015995f8f668f05df317ec9584b51379edd35400", "6815d98692aa0e7514d21f87e78dfe05015963aa6162228643539a7e4c1e8ff1", "12c810cdb191a7c070cc6d5fa816f583cb18ae603727d85d265b620d1393513d", "0151eae6d6b2cf5f85f409c1f875e1e69e931e24f022d99c55402dd2b6ab8c2c", "6b7601db00bf9c1853654e19597f7ccaf80bb06351bc2a38fc409890f7f61e8b", "8563088513f7e9357247885f5fb315f4f0a1efa085ac03fcd041cdd472a45f19", "57a6cb3f24d5e937f5de59a1190f691fcb6e75eed7539f8facd3efbb0282afd2", "29675b08fcd922810c3df4a688ac627c932a0113bf715b31e742a128d816b8cf", "0fd1fc3d9c689b937442b640283ea3973c7526cd6614cef83f0a78ca40bf9f22", "4f974e241c620bcb614ef92da130c010891734f39432a85f2e07ef7e2b003103", "aae309c4c189415efc31a0cdf5eab1719693e9a8d2fa4199e5a938b547443bc7", "320738e149d4268e9e712c23049bf3a898d587b37463388d470cd79e01575b4a", "15826fe697e8a6a5a566642079f7e65de2214ef727ed2a3427059a7882fd5ac9", "80fa47e223b4bfbcdc543e9fa5a5957f9fbdc0abc719b7525ae59f4293755077", "489e6ab94cd850a6f9933e6d0d3ee2ce27152020dd85aea69665394a819c771e", "3617508d653a54cb9777ae8444d840dc645e1cce80ef945c5e449dc1ac0821c7", "4cb00d32cdae556e48d71028f69eb4dfdf6a192c17901a5253d5308a90f85d32", "31020547ee3a9d91eefc195809f3bb83c7fc4f6785230697e80cad79699d73e1", "be8aae86ee35e6fec8b87d7e1724e572b8cb6fb34323ba7a7a89dac46ace7abe", "b15e8aa2d43dda5686bdc78d17ceb6d99c107ce905d23385ccd5ec9a0b8aab72", "ba6ff2f6b50321a32acb2e54c00285ba8fc4097321fcf2d303cc56de3b3ea7ac", "053751802b0de87850df589a69184b6ed6b2e36b9e2405208f9c5cb3c159e64d", "9e9823c6f3161d283c244ef73965f647a2b146ea9f0898c60c373f974d754760", "ac53bcce7e4f368a1d1ed6abde3a6b3fb8458e2239c10497789a6557ba38fba8", "a525cf0f7498520910fd6cffeb29b3184649cacd1dbb203dad5c0ee8d953919f", "8dc5d5e199c36a344b6f2fc8f34ecda43c0510b21da4422f8e25ce432e98e71b", "da318a7ab0b79d63d1dedb67163a1d30e7704ca8d314d7505ce6c706bafc5067", "f679f2d9af00f51bac0040eb9285544cfa44f31adf94e046c08aa514c617f356", "842bbed3d2316782a4f434ea5d97c2a4b84064c6dbe175f16d5fa764dac59f7a", "c2362f3623fc9627bfc387c8957917751a0ef83452852277e31a724e05d75ff3", "082b31883788078603ebf6a55b67d3216c89eba2de4efe930cf46b0ca19e2f31", "a2f842fab36d1c712a2e7b537edec251e5474c0a088da6b8bd12f9ca31546ce0", "c12b7111e8c618ab6c9aa0af647d07f650dc3c608bd7fd4e109a824bceabb7f8", "70b0fc8c80b05f599361686877467d0790270fb510c8a6c14b514bc8a86d1662", "c2f6d05ec1f47077519f43ed835140e11cbefabb79b42826f7e0060c38bcfeaf", "01dd3a9303d8c0e95f8e9226a0977bee9a1a4d2d1a7058639d71e8084e99bdd7", "033ea8b3d9ea3dac4ac0f3213a0681856cf3f9f080dee9a57bd641a62fe63fc7", "b23894dbcafcbde89fa8825867e873ce061b1bd5f7849f6dd3802f2e8433edd8", "8f6493ad3f0531071e9aacc2163b0d81b29b5e5dec061e19a8eb99689f2d993d", "d49ad47bf61559ae0c2c85327869216cde9e2d2ba5bca0071eaff8c3cdff19cd", "0efab75ee38afa00ad64e409af88bdce297fc177a73696147c10a3d8ed63a89d", "f9478221900dda5db2ea6c9b2eba8c423566678c2e21f0d8e510a90b281c6c4b", "b578b1e37d95e45707e4cb1d28584dfde00737fea6a49b2ec7c1be5e14d17b4e", "ccc6a6d9d0560837302f079a18592ca5269be89a3229ad68aca98d3035cf90e4", "15ebb53e54692f540154e83b565df7816f61862744776a016e01f41af2218d87", "0c48f4ed84e496f67706e3c4a24a01c3fd7d88efab40144e832dc702fb151bc5", "a5ba780cea914e766ccbe19b2dac30cf3f1d26ce432395b5d7f610d8602d60e6", "dfef350eb27ccea5637e5e8c4fe27255b265947679d26399b595ffaf42be33da", "f24adf879da3a6cffe1431c04dd680e3c68825eebfc3903df9772f3b8b45f8aa", "852a5fa501e9a6fd1a69154e1d333f884470674ca0e35334e2a280d897394dba", "acdf8f68c28fc0fad26c92cea552709dfb9e24bcf6fb1fa614a104ccf3f2462f", "9bc98a7791ae9083b89503768110cb236cacb60e6c5f9ac3121ab8b8c3b3080d", "fdf13611e0068ec16c9f7a74834a5de97d2eeadcc2ba6225a45b98ca8d1e10a7", "b02aa8f6e43bf9b04615d487527695c0480458254fa59152ade30b5b29222501", "be1e58b11cd5e469c0988390d06becc79295d3e151474e0aa4ce3965749ad0f5", "2383e32634f99dce92d86427f195e2aec81ab90d210b274d616a593d10e843f0", "2d8a2e799084549132d23bf8f3c20cd32e540843404b85e1fe95aba215f673ec", "95cc230eae6879e1fbf1407ba0f962991f8b74adcecdfe84131d7e62f35bb1bf", "2c6a2d12fd8e66a712a510dc9445da5b7b32a5c112a91aababcb62e6fdbff647", "099bc599c401fb14b01da136f5319572ae61ceaebce0b95d3629f76a83197516", "4be52032e1c0cb0dcb33f2439ae4737efa206dc0b3cc21cc2c3ab2298c90595a", "e42c5c3ced8fc085bb3402f115a4d228e574b9dfe8214cf66bc36adbe6100bd0", "c9b8de5fc1a55d159ed2db0e9fc957445beba93bf291c8b10eca06bb57785e6b", "9451beea511ccd1ace0ccb821287ac0c33d64c8e9c56946b287a43d161d71381", "8f1c3f642294029d496a41a5ffacddfb42ed38c069fb2cd4786b6de7f070f266", "1a680259fa9086d8d2d3f08dde01375b1b05b6c28be9a964983d3c2c97c450c1", "f2b96c9d408380653a6d14b16b45c0ea7ad3fd2d40cf008e974f7631316069ef", "e8091ef16783f9afe2d3c6c29b80f714a03ba1e1ba5d316e628adfab4fea7916", "ba8a96a482ddfad3b2cfa3b3c4c197392b7afa6923cb9da64918d812699c6f1b"];
+  var UK='gym_blue_black_unlock_v1';
+  var ov=document.getElementById('lock'),inp=document.getElementById('lockinp'),msg=document.getElementById('lockmsg');
+  function ok(h){return HASHES.indexOf(h)>-1}
+  function unlock(){ov.style.display='none'}
+  function sha(s){
+    var b=new TextEncoder().encode(s);
+    return crypto.subtle.digest('SHA-256',b).then(function(d){
+      return Array.prototype.map.call(new Uint8Array(d),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+    });
+  }
+  var saved=null;try{saved=localStorage.getItem(UK)}catch(e){}
+  if(saved&&ok(saved)){unlock();return}
+  function tryCode(){
+    var code=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(code.length!==12){msg.textContent='الكود غير مكتمل';return}
+    if(!window.crypto||!crypto.subtle){msg.textContent='افتح الرابط من متصفح Chrome';return}
+    sha(code).then(function(h){
+      if(ok(h)){try{localStorage.setItem(UK,h)}catch(e){}unlock()}
+      else msg.textContent='الكود غير صحيح، تأكد منه وحاول مرة أخرى';
+    }).catch(function(){msg.textContent='تعذر التحقق، افتح الرابط من متصفح Chrome'});
+  }
+  document.getElementById('lockbtn').addEventListener('click',tryCode);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')tryCode()});
+})();
+</script>
+</body>
+</html>
