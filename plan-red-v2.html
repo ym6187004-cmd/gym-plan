@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جدول التمارين - أحمر وأبيض</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth}
+body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif;background-color:#B91C1C;color:#fff;min-height:100vh;padding:24px 12px 90px;background-image:radial-gradient(circle at 15% 15%,rgba(127,29,29,.8) 0%,transparent 40%),radial-gradient(circle at 85% 85%,rgba(153,27,27,.8) 0%,transparent 40%);background-attachment:fixed}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.card{background:rgba(153,27,27,.7);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 32px rgba(0,0,0,.25);border-radius:16px}
+.inp,button{font:inherit;color:#fff;-webkit-text-fill-color:#fff}
+.inp{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);caret-color:#fff;font-size:15px;border-radius:8px;padding:6px 10px;width:100%;min-width:0;outline:none}
+.inp:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.6)}
+.inp::placeholder{color:rgba(255,255,255,.4);-webkit-text-fill-color:rgba(255,255,255,.4)}
+button{cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:8px 14px;font-weight:600}
+header{padding:24px}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:16px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:24px}
+h1{font-size:24px;font-weight:900}
+.sub{font-size:13px;color:rgba(255,255,255,.7);direction:ltr;text-align:right}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+#status{text-align:center;font-size:13px;color:#fecaca;margin-bottom:12px}#status.warn{color:#fde68a}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+nav a{padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;text-decoration:none;font-size:13px;font-weight:600}
+main{display:flex;flex-direction:column;gap:32px}
+section.day{padding:22px;display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px}
+.dh{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:12px}
+.dh h2{font-size:26px;font-weight:800;display:flex;gap:10px}
+.badge{font-size:12px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.mrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mrow label,.lbl{font-size:14px;font-weight:700;white-space:nowrap}
+.mrow .inp{max-width:320px}
+.tw{overflow-x:auto;border-radius:12px;border:1px solid rgba(255,255,255,.2)}
+table{width:100%;min-width:640px;border-collapse:collapse;text-align:right;font-size:14px}
+thead{background:rgba(255,255,255,.1)}
+th{padding:10px;border-bottom:1px solid rgba(255,255,255,.2);border-left:1px solid rgba(255,255,255,.2)}
+th.c,td .c{text-align:center}
+td{padding:6px;border-left:1px solid rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.1)}
+td.n,th.n{text-align:center;width:34px;color:rgba(255,255,255,.7);font-size:12px}
+.dx{padding:4px 9px;color:#ffb4b4;-webkit-text-fill-color:#ffb4b4;border-color:rgba(255,150,150,.5);border-radius:8px}
+.add{width:100%;margin-top:8px;border-style:dashed}
+.foot{padding-top:14px;border-top:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+textarea{resize:vertical;padding:10px}
+#bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:#0b0d14;border:1px solid #fff;border-radius:14px;padding:10px 14px}
+#bar[hidden],#sh[hidden]{display:none}
+#tl{flex:1;font-size:26px;font-weight:800;direction:ltr;text-align:right}
+#sh{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.65);display:flex;align-items:flex-end}
+.pn{width:100%;background:#0b0d14;border-top:2px solid #fff;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:18px}
+.rd{direction:ltr;text-align:center;font-size:38px;font-weight:800;margin:8px 0 12px}
+.sl{display:flex;flex-direction:column;gap:4px;font-size:13px;margin-bottom:8px}
+input[type=range]{width:100%;height:30px;accent-color:#fff;background:transparent;border:0;padding:0}
+#toast{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#0b0d14;border:1px solid #fff;padding:10px 18px;border-radius:12px;font-size:14px;z-index:40;opacity:0;pointer-events:none;transition:.3s}#toast.on{opacity:1}
+@media(max-width:640px){h1{font-size:20px}section.day{padding:14px}.grid{grid-template-columns:1fr}}
+#lock{position:fixed;inset:0;z-index:9999;background:#B91C1C;display:flex;align-items:center;justify-content:center;padding:20px;font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif;color:#fff}
+#lock .box{width:100%;max-width:380px;background:rgba(153,27,27,.85);border:1px solid rgba(255,255,255,.35);border-radius:18px;padding:28px 20px;text-align:center}
+#lock h2{font-size:22px;margin-bottom:8px;color:#ffffff}
+#lock p{font-size:14px;opacity:.85;margin-bottom:18px;line-height:1.7}
+#lock input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;-webkit-text-fill-color:#fff;font-size:18px;text-align:center;letter-spacing:2px;direction:ltr;outline:none;text-transform:uppercase}
+#lock button{width:100%;margin-top:14px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.2);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+#lockmsg{min-height:22px;margin-top:12px;font-size:13px;color:#ffd7d7}
+</style></head><body>
+<div id="lock"><div class="box">
+<h2>🔒 أدخل كود التفعيل</h2>
+<p>الكود وصلك مع عملية الشراء. تدخله مرة واحدة فقط على هذا الهاتف.</p>
+<input id="lockinp" type="text" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters">
+<button id="lockbtn" type="button">تفعيل</button>
+<div id="lockmsg"></div>
+</div></div>
+
+<div class="wrap">
+<header class="card"><div class="top"><div class="brand"><div class="logo">🏋️</div><div><h1>قالب تتبع التمارين الأسبوعي</h1><div class="sub">Weekly Workout Tracker</div></div></div>
+<div class="btns"><button data-a="tm">⏱ المؤقت</button><button data-a="bk">نسخ احتياطي</button><button data-a="rs">استعادة</button><button data-a="rm">↺ إعادة ضبط</button></div></div>
+<div id="status"></div><nav id="nav"></nav></header>
+<main id="days"></main></div>
+<div id="bar" hidden><span id="tl"></span><button data-a="tm">ضبط</button><button data-a="ts">إيقاف</button></div>
+<div id="sh" hidden><div class="pn"><div class="ph"><b>⏱ المؤقت</b><button data-a="x">✕</button></div><div class="rd" id="rd"></div><label class="sl">دقيقة<input type="range" id="rm" min="0" max="59"></label><label class="sl">ثانية<input type="range" id="rc" min="0" max="55" step="5"></label><button class="add" data-a="go">ابدأ المؤقت</button></div></div>
+<div id="toast"></div>
+<script>
+var K='gym_red_white_data_v2',DY=[['sat','السبت','⚡'],['sun','الأحد','🔥'],['mon','الاثنين','💪'],['tue','الثلاثاء','🥊'],['wed','الأربعاء','🏆'],['thu','الخميس','🎯'],['fri','الجمعة','🌿']],S,mem=null,lsOk=false,tm,end=0,ctx,tt;
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function ex(){return{n:'',s:'',r:'',w:'',t:''}}
+function mg(){return{n:'',x:[ex(),ex(),ex(),ex()]}}
+function fresh(){var o={rs:90,d:{}};DY.forEach(function(y){o.d[y[0]]={m:[mg(),mg()],cT:'',cD:'',nt:''}});return o}
+function ld(){var r=null;try{r=localStorage.getItem(K)}catch(e){}try{var o=JSON.parse(r||mem);return o&&o.d?o:null}catch(e){return null}}
+function stat(){var s=$('status');s.className=lsOk?'':'warn';s.textContent=lsOk?'💾 يُحفظ تلقائياً على هذا الجهاز':'⚠️ التخزين غير مدعوم هنا. افتح الرابط من متصفح Chrome واستخدم النسخ الاحتياطي'}
+function save(){var j=JSON.stringify(S);try{localStorage.setItem(K,j);lsOk=localStorage.getItem(K)===j}catch(e){lsOk=false;mem=j}stat()}
+function toast(m){var t=$('toast');t.textContent=m;t.className='on';clearTimeout(tt);tt=setTimeout(function(){t.className=''},2600)}
+function fr(s){return String(s==null?'':s).replace(/\u200f/g,'').replace(/(\d+(?:\.\d+)?)/g,'$1\u200f')}
+function fx(t){var v=t.value,p=t.selectionStart,l=v.slice(0,p).replace(/\u200f/g,'').length,n=fr(v);if(n===v)return;t.value=n;var c=0,i=0;for(;i<n.length&&c<l;i++)if(n.charCodeAt(i)!==8207)c++;try{t.setSelectionRange(i,i)}catch(e){}}
+function row(i,e){return '<tr data-i="'+i+'"><td class="n">'+(i+1)+'</td><td><input class="inp" data-f="n" placeholder="اسم التمرين..." value="'+esc(e.n)+'"></td><td><input class="inp c" data-f="s" value="'+esc(e.s)+'"></td><td><input class="inp c" data-f="r" value="'+esc(fr(e.r))+'"></td><td><input class="inp c" data-f="w" value="'+esc(fr(e.w))+'"></td><td><input class="inp c" data-f="t" value="'+esc(e.t)+'"></td><td><button class="dx" data-a="dr">✕</button></td></tr>'}
+function render(){
+ $('nav').innerHTML=DY.map(function(Y){return '<a href="#day-'+Y[0]+'">'+Y[1]+'</a>'}).join('');
+ $('days').innerHTML=DY.map(function(Y){var y=Y[0],d=S.d[y];return '<section id="day-'+y+'" class="card day"><div class="dh"><h2><span>'+Y[2]+'</span>'+Y[1]+'</h2><span class="badge">جدول التمارين</span></div>'+d.m.map(function(g,m){return '<div class="mb" data-y="'+y+'" data-m="'+m+'"><div class="mrow"><label>🏋️ العضلة:</label><input class="inp" data-mn="1" placeholder="اسم العضلة..." value="'+esc(g.n)+'"><button class="dx" data-a="dm">✕</button></div><div class="tw"><table><thead><tr><th class="n">#</th><th style="width:38%">اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th><th></th></tr></thead><tbody>'+g.x.map(function(e,i){return row(i,e)}).join('')+'</tbody></table></div><button class="add" data-a="ar">+ إضافة تمرين</button></div>'}).join('')+'<button class="add" data-a="am" data-y="'+y+'">+ إضافة عضلة</button><div class="foot"><div class="grid"><div class="box"><label class="lbl">⏱️ مدة الكارديو:</label><input class="inp" data-y="'+y+'" data-df="cD" value="'+esc(d.cD)+'"></div><div class="box"><label class="lbl">❤️ نوع الكارديو:</label><input class="inp" data-y="'+y+'" data-df="cT" value="'+esc(d.cT)+'"></div></div><label class="lbl">📝 ملاحظات اليوم:</label><textarea class="inp" rows="2" data-y="'+y+'" data-df="nt">'+esc(d.nt)+'</textarea></div></section>'}).join('')}
+function tone(a){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume();a.forEach(function(n){var o=ctx.createOscillator(),g=ctx.createGain(),s=ctx.currentTime+n[0];o.type='sine';o.frequency.value=n[1];g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(n[2],s+.03);g.gain.exponentialRampToValueAtTime(.0001,s+.4);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.43)})}catch(e){}}
+function snd(k){tone(k=='r'?[[0,440,.25]]:[[0,660,.5],[.5,660,.5],[1,880,.5]]);if(k=='x'&&navigator.vibrate)navigator.vibrate([120,80,120])}
+function startT(n){end=Date.now()+n*1000;snd('r');clearInterval(tm);tm=setInterval(tick,250);$('bar').hidden=false;tick()}
+function tick(){var s=Math.ceil((end-Date.now())/1000);if(s<=0){stopT();snd('x');toast('انتهت الراحة');return}$('tl').textContent=Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function stopT(){clearInterval(tm);$('bar').hidden=true}
+function tmu(){$('rd').textContent=('0'+$('rm').value).slice(-2)+' : '+('0'+$('rc').value).slice(-2)}
+function cp(t){return navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t).then(function(){return 1},function(){return 0}):Promise.resolve(0)}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a,mb=b.closest('.mb'),g=mb&&S.d[mb.dataset.y].m[mb.dataset.m];
+ if(a=='ar'){g.x.push(ex());save();render()}
+ else if(a=='dr'){if(confirm('حذف هذا التمرين؟')){g.x.splice(+b.closest('tr').dataset.i,1);save();render()}}
+ else if(a=='dm'){if(confirm('حذف هذه العضلة مع تمارينها؟')){S.d[mb.dataset.y].m.splice(+mb.dataset.m,1);save();render()}}
+ else if(a=='am'){S.d[b.dataset.y].m.push(mg());save();render()}
+ else if(a=='tm'){$('rm').value=Math.floor(S.rs/60);$('rc').value=S.rs%60;tmu();$('sh').hidden=false}
+ else if(a=='go'){var n=$('rm').value*60+ +$('rc').value;if(n>0){S.rs=n;save();$('sh').hidden=true;startT(n)}}
+ else if(a=='ts')stopT();
+ else if(a=='x')$('sh').hidden=true;
+ else if(a=='bk'){var j=JSON.stringify(S);cp(j).then(function(ok){ok?toast('تم نسخ بياناتك، الصقها في ملاحظات هاتفك'):prompt('انسخ هذا النص:',j)})}
+ else if(a=='rs'){var t=prompt('الصق النسخة الاحتياطية:');if(t){try{var o=JSON.parse(t);if(!o.d)throw 0;S=o;save();render();toast('تمت الاستعادة')}catch(er){toast('النص غير صالح')}}}
+ else if(a=='rm'){if(confirm('هل أنت متأكد من مسح كل البيانات؟')){try{localStorage.removeItem(K)}catch(er){}mem=null;S=fresh();save();render();toast('تم إعادة الضبط')}}});
+document.addEventListener('input',function(e){var t=e.target,mb=t.closest('.mb'),f=t.dataset.f;
+ if(t.id=='rm'||t.id=='rc'){tmu();return}
+ if(f){if(f=='r'||f=='w')fx(t);S.d[mb.dataset.y].m[mb.dataset.m].x[t.closest('tr').dataset.i][f]=t.value}
+ else if(t.dataset.mn)S.d[mb.dataset.y].m[mb.dataset.m].n=t.value;
+ else if(t.dataset.df)S.d[t.dataset.y][t.dataset.df]=t.value;
+ else return;
+ save()});
+S=ld()||fresh();render();save();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(){return caches.open('gym-plan-v1').then(function(c){return c.add(location.href)})}).catch(function(){})})}
+
+(function(){
+  var HASHES=["6ac3442754216af7d14522ab3340a17760678e961d8eb644b750c5a1b5db01ec", "90b40c27d616e469ae88b6eeb61e2a3600996b1cf8af0008f7c5f84a2af46e28", "1658736f2198405a92d97f96b4e5f4398e07783e5f340cacc520e9a23fcead4b", "384a1be2a48aaf4c16dddf47bd68cf5d20066d92fbda15b0d03ffb581d8ed6a9", "ff4740eaa10f7d6c7dec8d951a1468e0abdccb2c6ae891c041e1e1c029438ea4", "4f0b864cccfc2f001f77aa9d8c6a7b965e7de9f28f533666cdbddf25a42a6473", "5bcc9eb20b4cbe8854cab24d185343c86552ca0d921c6df3a3a67644af190831", "3d9dd8536d56bb22492b9e101b527659f348ca60a570e5ed3c65ee8c64914520", "92eaac15233059ae73560f4ce5b06344361d5232459c1989fdd197bf1013df6e", "f7c4e6635b82edd4628ee623fab736e5b142f6c041444da02f17020192f9616f", "55f4ce4a1cbea5058f5d5ecefd84209ae82aba82e4a63d7b499ecc5ddbc8e4c1", "89c546e8473b90de19a9b7a100c8dae78ca948aff799beaba8cddb41d626d948", "b49722170fee28c303665380a6c090cde142d8e75a7e1ad740c048d0a64d45ba", "b8a41f2a6cf0f292621b866b9189b7efe900611eb756252633ad0f63ac9ec7ad", "ec8cbb55b490fb8c89ec74f05b19e6b0b5fbd8157ae15357c8aabe498baace3b", "b897c61d2f3211139c0db48bbae68a31b379453b722fb1994b91234de3d7e4df", "941398e68ba393f34229f393e2fe850c4ce8533ad75fa04999bfd68e6edc8685", "728509e4d8604c78c5c17780be95e8d465aff461fa2f40db0ffc37bc377459de", "fef4b58b99039c40d871d4b23eaed91a625b4f986cfe5e0114423b0f984f351b", "ccf7901cf95d1d948f7caf41ffda63d8e7cd637cc8120df0607609ec74c81e22", "62530001e8f9b375695481e3b3d6bdf077adac0268a5c73abc3c6d0e97d3771c", "05664bf19929dc0a5c7cd74ebe0a95ec74806711617090e2b95a23683f43f9e0", "da256287ba100c2137ff304c34b3e4cc99745c0073ff5a74210a1e96f5427be5", "a79b49c84fcc984d5cd78cb52b999b39ce6524f190045c1507f60138bdd25770", "89920b08de140844bbc8ec82fa18b975f3f1866d73b83645ed2e54fc9741b00f", "37a010600f0f4b96f7a5d1c3825d52b198488cac98f68bc38f048f36f3c14dc5", "c675a9d0efdaf63ee46d8e80b4e1853d01390efcc9f16aab0500a7140ff0ce22", "227b585153cdb29df524dd4ca1efab5e3f01b3c8e19c10364f114cd35b2a15fa", "8b01bc08c97d9c6418742db7e2d972771f36ac1c0e971ca706a0ae218b9a8f6e", "a33b7832b8b61429c108ee8bd414e7e84a58f5f16d167385340749cb2cba67c5", "eec50de9280b2e4a4beb360f96f1fbdf24bb1672ed2e82795699fd06652eef26", "9e8ba2648558d1de8c8a50b7adff4c6818bc09ec1ca7e6e89b8334dfa7f078d9", "718163c469dabd345a77f55280916dd33eebaa51e533bcdb833dd219969a795f", "0ef6efd9039000dd83b370f54ede2059b90335326e53c60d862b32dcb671795f", "308b104b499d9a0652352a0c294e50ecb8ef9a9e39c5669b38b56f9b260ca543", "d04445d0c8853d0799aa6af0cc84f50b54c7fc674a9dae7d2438fe8b4dd69515", "5ba69f05233c1a271ee3033f13af60803de83343712a03b155d8e90a9fef15a3", "3b4ea3f32c253e9e20785ccb56957eb9446e36894ef64dcb453263b149d29f2f", "736b763c62a8f556656f33281652a333ed79cdde302ede3e8c8cd6465851a876", "6bbeae51b8eeb3d0bbae9fcbc09bf85ed61ee08a452b0757b4cdf094ea383e79", "c8bb620cfd951f1425bfbed683088b1377eaa32f82c170d68ec5325574b1bf1f", "1a1c2bb5eb713fbc4e43a12181bbb967e981fd0992437d68830b6e3c49ae5a13", "60174467eb37dad5c4edddf28c8d42780aeb0226e6392c282832c8c431358087", "ba6d023622a73efe68f83453c892aae53e85daccf03a09b27bd708092f39ed53", "27772bd997e2dcd87eda428b23ec504e10cfd9b66384afb7e33ad3847e0fbf93", "6441855f3d9292216abf193c27c9bef81d8b6d9f64ef90cdcf397b51d553410f", "a5433e711731db36bf3812a87f256fb59c3a703b6d3fe968f825a6a7b14cd679", "c0c526871a555620ef49aa725c35c7db15a08c4081ee7e8934b6e7c8a9bef1bc", "c835ea3c12fc2086a3d7291cdf9aadf0cdeee736825e2a213592c04c74ff67ab", "8c216f37b60f005c8d8c45339de1cb8630e93b33dad0b308c4bfc7a7291e987b", "4056f7e9f77ec536a21a84a3e3adb3e71c8f9727aa9c95c3b2da01237a5eabd1", "0412275ac2591a737c2b6659a4f6833d221b0a08803c74f0b54cab9970ac9ff9", "36ad4fb994ba0952e67663aec7a79e43f37bd8082aa932f837b80d24a76c044b", "afe3a3b2b6af17250b140b5847f13b6594fdd9c8809e8c4f1557b0c9a3007fe1", "e6b09fad6b1295085a097e18fa0b06eebe57a187ff8f5edc5dc4196f4580c691", "2e76008cca0f7b1b0311a9cd478e27ef719e49fbd0cf8c65b93cffa6b5fb0ca6", "308cc088d5b850fed02ed0a268130d131752b1db11b3994062c4d3e874f01c31", "e9aabb98aec75f7df3519ac34aaa1095c2813a393cf55920adfd25874ce81ceb", "f3fa8fe72d336a8de36c958a94997f681742d95d5b7d51b2693baa1d8f9430ee", "a6a429abe4fe2af61e757d776df88c73b97d8c9ef0b119e2e2bf8885dbd435ee", "3563aeed521bd90fd74adfd315fc1eac10644e58d4a6754a1e24ae47615cae65", "0320ac22965a61e3c998f4b8ab661cd730560296b06fc21092ab4051ba343bda", "9b4b071f6f4975d3d0103141bd34a2c7fe260ba1b10aa2e4491f5165db652b52", "ef09242c1ad7bd916ba62882fda8a8e5bb6628049e5ad1598e7df71d86dd9102", "688542b96b1fa47ce2be2804b15e51e37b098341b2f86713200092b39116a3be", "79e7be154e89a0d1263cf5b565c2b8a56aec2fe7b1509d056948eea68f6b2dbb", "c76517d9cfdbdd026f97f1c945a1deb9d3a96f0a24736a8bed78e640f88086c0", "9414cf6217fce1044f46b111212246f96678253181eb200da51fd09fd6acf419", "2464c9ffc77e6aa5bec4a505ecdac0dbb695fda86d3df45d6e51ccf3abed4403", "f658d112a28699ae11e381a6d01db7a7d43ae1066a658d89263108ac8c178de8", "a36951b2b4c7c8aeb31734857124930c637747cf090d66e17098aca3de87df05", "c8e876141fe9b4909a1e2a281ef3d3dc7d65889ff9cc48921764346f3636aac9", "f5ba9dd9d305a75bfd3a4caf8b2ee9052a274bd79beeec073b472ee218e57fd3", "d6fa86e44156d86272b3e99fa677e1e0f7981582bf34318d7c2d8d050b0ff19a", "55f624c680d62de59891deaeac1446f12c2f901c26690c53132e127c3037a11e", "a2245ac4eff60a1a7e93c9f24d027fe4bce588a3c0dca69848f3e5e94e3838f6", "df6ec27e765dce8eeba06699d09d9c38786b39bff1cec870db4b6f2558eaafc3", "8ca66f6456ca102e7cb0705095add0fafa6338862b39258c827c716318a1c4e4", "cf7747d890091b1302ab4786faf16df3a9e41e6f6e8d65786b2909f2807b9253", "67294c7b6a1a6da7f21ffa83649815f4dac295cfc07aa06f46f081f04657e6cc", "b8b7341d7b46fad16bb6a96d6b9c50be82a079d53208d2c88f0bd1a97ff5ec67", "45abacc0977a59314eaad5e07506051b02a21d3cd369d907b655dc07c4ac44eb", "9d086f64642238355835c22eb597536cf36e1b1412f26f773073923127c2c279", "97d6f3b9276b852389622deee51188c7602fa3e77f8d919a26625d3c415ee516", "3d60045be069ae771d40ab18aceea6bec9fda2d590d8d886bf03d300284a217a", "a0299b708ee7df159f236314a55ce1d96e90b13a35d999e12c37bed0ceb09a67", "7805d63abb33de6aa8072f693871aecf253a983a93878dca8238ca37bbf8d18e", "0ecfabdf16b1fb153dfbe82d9e7b8526896d68f1bc821f5d154e41a8cbd7517f", "19eb364ccc88309a9c2c2f1cea4575c1ecc6dc8ba5b194a5c90dda4c39ea9526", "94085b1fe918b513d7990f55dc40d7823caa4ef68ac4f65c51ecf822baac06e9", "6542b65ed4ed6ab74a1aa6548369bc2f8081d4296f24ac99a69ec5133d056aac", "64612d502295aac53d7d58f36557e81930256e92c82016a9b1235bd94924d4c6", "eb2c1d1fa616dab5fa5f570be3023ecb966773f7e0a3019673437ba50463a9a3", "447469e8b82c0908116a515253cac2d6c92b8619dbf49cd08cf603b08a9229b7", "2fbd7efaa6c1df7c576b6f422617458906e3805642041d44c637f463c9100083", "ed063236805495c109dff674f28063ca2eb2bfaff62dbd8af2bcd436e69f199e", "26aee728ffba5246a17bd7829b3f712e60330cc148f9477e4ae41199d2d77722", "d7b53c096394da3802a7c1eeb2f3c12ca9e473ef5c2a319c620735eb2cd90ada", "f551e60a794dbab47976521f25d8daac1bf096e76f700f9fe8c94e40dd39de9f", "e3eaf49bffc30e6907b5d5971fbc6f7f31dd04da72cb7eed946eb3e6bda23c93"];
+  var UK='gym_red_white_unlock_v1';
+  var ov=document.getElementById('lock'),inp=document.getElementById('lockinp'),msg=document.getElementById('lockmsg');
+  function ok(h){return HASHES.indexOf(h)>-1}
+  function unlock(){ov.style.display='none'}
+  function sha(s){
+    var b=new TextEncoder().encode(s);
+    return crypto.subtle.digest('SHA-256',b).then(function(d){
+      return Array.prototype.map.call(new Uint8Array(d),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+    });
+  }
+  var saved=null;try{saved=localStorage.getItem(UK)}catch(e){}
+  if(saved&&ok(saved)){unlock();return}
+  function tryCode(){
+    var code=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(code.length!==12){msg.textContent='الكود غير مكتمل';return}
+    if(!window.crypto||!crypto.subtle){msg.textContent='افتح الرابط من متصفح Chrome';return}
+    sha(code).then(function(h){
+      if(ok(h)){try{localStorage.setItem(UK,h)}catch(e){}unlock()}
+      else msg.textContent='الكود غير صحيح، تأكد منه وحاول مرة أخرى';
+    }).catch(function(){msg.textContent='تعذر التحقق، افتح الرابط من متصفح Chrome'});
+  }
+  document.getElementById('lockbtn').addEventListener('click',tryCode);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')tryCode()});
+})();
+</script></body></html>

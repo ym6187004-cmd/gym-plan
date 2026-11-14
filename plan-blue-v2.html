@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>جدول التمارين - أزرق</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth}
+body{font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif;background-color:#074292;color:#fff;min-height:100vh;padding:24px 12px 90px;background-image:radial-gradient(circle at 15% 15%,rgba(3,36,88,.85) 0%,transparent 40%),radial-gradient(circle at 85% 85%,rgba(5,50,115,.85) 0%,transparent 40%);background-attachment:fixed}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.card{background:rgba(4,45,105,.72);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.18);box-shadow:0 8px 32px rgba(0,0,0,.25);border-radius:16px}
+.inp,button{font:inherit;color:#fff;-webkit-text-fill-color:#fff}
+.inp{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);caret-color:#fff;font-size:15px;border-radius:8px;padding:6px 10px;width:100%;min-width:0;outline:none}
+.inp:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.6)}
+.inp::placeholder{color:rgba(255,255,255,.4);-webkit-text-fill-color:rgba(255,255,255,.4)}
+button{cursor:pointer;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:8px 14px;font-weight:600}
+header{padding:24px}
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:16px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:24px}
+h1{font-size:24px;font-weight:900}
+.sub{font-size:13px;color:rgba(255,255,255,.7);direction:ltr;text-align:right}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+#status{text-align:center;font-size:13px;color:#bfdbfe;margin-bottom:12px}#status.warn{color:#fde68a}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+nav a{padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;text-decoration:none;font-size:13px;font-weight:600}
+main{display:flex;flex-direction:column;gap:32px}
+section.day{padding:22px;display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px}
+.dh{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:12px}
+.dh h2{font-size:26px;font-weight:800;display:flex;gap:10px}
+.badge{font-size:12px;padding:4px 12px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.mrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mrow label,.lbl{font-size:14px;font-weight:700;white-space:nowrap}
+.mrow .inp{max-width:320px}
+.tw{overflow-x:auto;border-radius:12px;border:1px solid rgba(255,255,255,.2)}
+table{width:100%;min-width:640px;border-collapse:collapse;text-align:right;font-size:14px}
+thead{background:rgba(255,255,255,.1)}
+th{padding:10px;border-bottom:1px solid rgba(255,255,255,.2);border-left:1px solid rgba(255,255,255,.2)}
+th.c,td .c{text-align:center}
+td{padding:6px;border-left:1px solid rgba(255,255,255,.2);border-top:1px solid rgba(255,255,255,.1)}
+td.n,th.n{text-align:center;width:34px;color:rgba(255,255,255,.7);font-size:12px}
+.dx{padding:4px 9px;color:#ffb4b4;-webkit-text-fill-color:#ffb4b4;border-color:rgba(255,150,150,.5);border-radius:8px}
+.add{width:100%;margin-top:8px;border-style:dashed}
+.foot{padding-top:14px;border-top:1px solid rgba(255,255,255,.2);display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.box{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.1)}
+textarea{resize:vertical;padding:10px}
+#bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:#0b0d14;border:1px solid #fff;border-radius:14px;padding:10px 14px}
+#bar[hidden],#sh[hidden]{display:none}
+#tl{flex:1;font-size:26px;font-weight:800;direction:ltr;text-align:right}
+#sh{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.65);display:flex;align-items:flex-end}
+.pn{width:100%;background:#0b0d14;border-top:2px solid #fff;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom,0px))}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:18px}
+.rd{direction:ltr;text-align:center;font-size:38px;font-weight:800;margin:8px 0 12px}
+.sl{display:flex;flex-direction:column;gap:4px;font-size:13px;margin-bottom:8px}
+input[type=range]{width:100%;height:30px;accent-color:#fff;background:transparent;border:0;padding:0}
+#toast{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#0b0d14;border:1px solid #fff;padding:10px 18px;border-radius:12px;font-size:14px;z-index:40;opacity:0;pointer-events:none;transition:.3s}#toast.on{opacity:1}
+@media(max-width:640px){h1{font-size:20px}section.day{padding:14px}.grid{grid-template-columns:1fr}}
+#lock{position:fixed;inset:0;z-index:9999;background:#074292;background-image:radial-gradient(circle at 15% 15%,rgba(3,36,88,.9) 0%,transparent 45%),radial-gradient(circle at 85% 85%,rgba(5,50,115,.9) 0%,transparent 45%);display:flex;align-items:center;justify-content:center;padding:20px;font-family:"Cairo","Segoe UI",Tahoma,Arial,sans-serif;color:#fff}
+#lock .box{width:100%;max-width:380px;background:rgba(5,50,115,.8);border:1px solid rgba(255,255,255,.3);border-radius:18px;padding:28px 20px;text-align:center;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+#lock h2{font-size:22px;margin-bottom:8px;color:#fff}
+#lock p{font-size:14px;opacity:.9;margin-bottom:18px;line-height:1.7}
+#lock input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;-webkit-text-fill-color:#fff;font-size:18px;text-align:center;letter-spacing:2px;direction:ltr;outline:none;text-transform:uppercase}
+#lock button{width:100%;margin-top:14px;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.2);color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+#lockmsg{min-height:22px;margin-top:12px;font-size:13px;color:#ffd7d7}
+</style></head><body>
+<div id="lock"><div class="box">
+<h2>🔒 أدخل كود التفعيل</h2>
+<p>الكود وصلك مع عملية الشراء. تدخله مرة واحدة فقط على هذا الهاتف.</p>
+<input id="lockinp" type="text" placeholder="XXXX-XXXX-XXXX" autocomplete="off" autocapitalize="characters">
+<button id="lockbtn" type="button">تفعيل</button>
+<div id="lockmsg"></div>
+</div></div>
+
+<div class="wrap">
+<header class="card"><div class="top"><div class="brand"><div class="logo">🏋️</div><div><h1>قالب تتبع التمارين الأسبوعي</h1><div class="sub">Weekly Workout Tracker</div></div></div>
+<div class="btns"><button data-a="tm">⏱ المؤقت</button><button data-a="bk">نسخ احتياطي</button><button data-a="rs">استعادة</button><button data-a="rm">↺ إعادة ضبط</button></div></div>
+<div id="status"></div><nav id="nav"></nav></header>
+<main id="days"></main></div>
+<div id="bar" hidden><span id="tl"></span><button data-a="tm">ضبط</button><button data-a="ts">إيقاف</button></div>
+<div id="sh" hidden><div class="pn"><div class="ph"><b>⏱ المؤقت</b><button data-a="x">✕</button></div><div class="rd" id="rd"></div><label class="sl">دقيقة<input type="range" id="rm" min="0" max="59"></label><label class="sl">ثانية<input type="range" id="rc" min="0" max="55" step="5"></label><button class="add" data-a="go">ابدأ المؤقت</button></div></div>
+<div id="toast"></div>
+<script>
+var K='gym_blue_glass_data_v2',DY=[['sat','السبت','⚡'],['sun','الأحد','🔥'],['mon','الاثنين','💪'],['tue','الثلاثاء','🥊'],['wed','الأربعاء','🏆'],['thu','الخميس','🎯'],['fri','الجمعة','🌿']],S,mem=null,lsOk=false,tm,end=0,ctx,tt;
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function ex(){return{n:'',s:'',r:'',w:'',t:''}}
+function mg(){return{n:'',x:[ex(),ex(),ex(),ex()]}}
+function fresh(){var o={rs:90,d:{}};DY.forEach(function(y){o.d[y[0]]={m:[mg(),mg()],cT:'',cD:'',nt:''}});return o}
+function ld(){var r=null;try{r=localStorage.getItem(K)}catch(e){}try{var o=JSON.parse(r||mem);return o&&o.d?o:null}catch(e){return null}}
+function stat(){var s=$('status');s.className=lsOk?'':'warn';s.textContent=lsOk?'💾 يُحفظ تلقائياً على هذا الجهاز':'⚠️ التخزين غير مدعوم هنا. افتح الرابط من متصفح Chrome واستخدم النسخ الاحتياطي'}
+function save(){var j=JSON.stringify(S);try{localStorage.setItem(K,j);lsOk=localStorage.getItem(K)===j}catch(e){lsOk=false;mem=j}stat()}
+function toast(m){var t=$('toast');t.textContent=m;t.className='on';clearTimeout(tt);tt=setTimeout(function(){t.className=''},2600)}
+function fr(s){return String(s==null?'':s).replace(/\u200f/g,'').replace(/(\d+(?:\.\d+)?)/g,'$1\u200f')}
+function fx(t){var v=t.value,p=t.selectionStart,l=v.slice(0,p).replace(/\u200f/g,'').length,n=fr(v);if(n===v)return;t.value=n;var c=0,i=0;for(;i<n.length&&c<l;i++)if(n.charCodeAt(i)!==8207)c++;try{t.setSelectionRange(i,i)}catch(e){}}
+function row(i,e){return '<tr data-i="'+i+'"><td class="n">'+(i+1)+'</td><td><input class="inp" data-f="n" placeholder="اسم التمرين..." value="'+esc(e.n)+'"></td><td><input class="inp c" data-f="s" value="'+esc(e.s)+'"></td><td><input class="inp c" data-f="r" value="'+esc(fr(e.r))+'"></td><td><input class="inp c" data-f="w" value="'+esc(fr(e.w))+'"></td><td><input class="inp c" data-f="t" value="'+esc(e.t)+'"></td><td><button class="dx" data-a="dr">✕</button></td></tr>'}
+function render(){
+ $('nav').innerHTML=DY.map(function(Y){return '<a href="#day-'+Y[0]+'">'+Y[1]+'</a>'}).join('');
+ $('days').innerHTML=DY.map(function(Y){var y=Y[0],d=S.d[y];return '<section id="day-'+y+'" class="card day"><div class="dh"><h2><span>'+Y[2]+'</span>'+Y[1]+'</h2><span class="badge">جدول التمارين</span></div>'+d.m.map(function(g,m){return '<div class="mb" data-y="'+y+'" data-m="'+m+'"><div class="mrow"><label>🏋️ العضلة:</label><input class="inp" data-mn="1" placeholder="اسم العضلة..." value="'+esc(g.n)+'"><button class="dx" data-a="dm">✕</button></div><div class="tw"><table><thead><tr><th class="n">#</th><th style="width:38%">اسم التمرين</th><th class="c">الجولات</th><th class="c">العدات</th><th class="c">الوزن</th><th class="c">الراحة</th><th></th></tr></thead><tbody>'+g.x.map(function(e,i){return row(i,e)}).join('')+'</tbody></table></div><button class="add" data-a="ar">+ إضافة تمرين</button></div>'}).join('')+'<button class="add" data-a="am" data-y="'+y+'">+ إضافة عضلة</button><div class="foot"><div class="grid"><div class="box"><label class="lbl">⏱️ مدة الكارديو:</label><input class="inp" data-y="'+y+'" data-df="cD" value="'+esc(d.cD)+'"></div><div class="box"><label class="lbl">❤️ نوع الكارديو:</label><input class="inp" data-y="'+y+'" data-df="cT" value="'+esc(d.cT)+'"></div></div><label class="lbl">📝 ملاحظات اليوم:</label><textarea class="inp" rows="2" data-y="'+y+'" data-df="nt">'+esc(d.nt)+'</textarea></div></section>'}).join('')}
+function tone(a){try{ctx=ctx||new (window.AudioContext||window.webkitAudioContext)();if(ctx.resume)ctx.resume();a.forEach(function(n){var o=ctx.createOscillator(),g=ctx.createGain(),s=ctx.currentTime+n[0];o.type='sine';o.frequency.value=n[1];g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(n[2],s+.03);g.gain.exponentialRampToValueAtTime(.0001,s+.4);o.connect(g);g.connect(ctx.destination);o.start(s);o.stop(s+.43)})}catch(e){}}
+function snd(k){tone(k=='r'?[[0,440,.25]]:[[0,660,.5],[.5,660,.5],[1,880,.5]]);if(k=='x'&&navigator.vibrate)navigator.vibrate([120,80,120])}
+function startT(n){end=Date.now()+n*1000;snd('r');clearInterval(tm);tm=setInterval(tick,250);$('bar').hidden=false;tick()}
+function tick(){var s=Math.ceil((end-Date.now())/1000);if(s<=0){stopT();snd('x');toast('انتهت الراحة');return}$('tl').textContent=Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function stopT(){clearInterval(tm);$('bar').hidden=true}
+function tmu(){$('rd').textContent=('0'+$('rm').value).slice(-2)+' : '+('0'+$('rc').value).slice(-2)}
+function cp(t){return navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(t).then(function(){return 1},function(){return 0}):Promise.resolve(0)}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b)return;var a=b.dataset.a,mb=b.closest('.mb'),g=mb&&S.d[mb.dataset.y].m[mb.dataset.m];
+ if(a=='ar'){g.x.push(ex());save();render()}
+ else if(a=='dr'){if(confirm('حذف هذا التمرين؟')){g.x.splice(+b.closest('tr').dataset.i,1);save();render()}}
+ else if(a=='dm'){if(confirm('حذف هذه العضلة مع تمارينها؟')){S.d[mb.dataset.y].m.splice(+mb.dataset.m,1);save();render()}}
+ else if(a=='am'){S.d[b.dataset.y].m.push(mg());save();render()}
+ else if(a=='tm'){$('rm').value=Math.floor(S.rs/60);$('rc').value=S.rs%60;tmu();$('sh').hidden=false}
+ else if(a=='go'){var n=$('rm').value*60+ +$('rc').value;if(n>0){S.rs=n;save();$('sh').hidden=true;startT(n)}}
+ else if(a=='ts')stopT();
+ else if(a=='x')$('sh').hidden=true;
+ else if(a=='bk'){var j=JSON.stringify(S);cp(j).then(function(ok){ok?toast('تم نسخ بياناتك، الصقها في ملاحظات هاتفك'):prompt('انسخ هذا النص:',j)})}
+ else if(a=='rs'){var t=prompt('الصق النسخة الاحتياطية:');if(t){try{var o=JSON.parse(t);if(!o.d)throw 0;S=o;save();render();toast('تمت الاستعادة')}catch(er){toast('النص غير صالح')}}}
+ else if(a=='rm'){if(confirm('هل أنت متأكد من مسح كل البيانات؟')){try{localStorage.removeItem(K)}catch(er){}mem=null;S=fresh();save();render();toast('تم إعادة الضبط')}}});
+document.addEventListener('input',function(e){var t=e.target,mb=t.closest('.mb'),f=t.dataset.f;
+ if(t.id=='rm'||t.id=='rc'){tmu();return}
+ if(f){if(f=='r'||f=='w')fx(t);S.d[mb.dataset.y].m[mb.dataset.m].x[t.closest('tr').dataset.i][f]=t.value}
+ else if(t.dataset.mn)S.d[mb.dataset.y].m[mb.dataset.m].n=t.value;
+ else if(t.dataset.df)S.d[t.dataset.y][t.dataset.df]=t.value;
+ else return;
+ save()});
+S=ld()||fresh();render();save();
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(){return navigator.serviceWorker.ready}).then(function(){return caches.open('gym-plan-v1').then(function(c){return c.add(location.href)})}).catch(function(){})})}
+
+(function(){
+  var HASHES=["907019697249033148b273bee56ca1adb769baf4a5784db20eb82a4f58446532", "f17e644bcb7e9a1584ea1ec358387f7a913f3fb617ef4f4d0c46ca86a61d858e", "80b166d4fae3fc377af72c61dbda944bbe7a5a258741f5cc3c04154a8f33c4d9", "ef3cd2760ff57fe98c2ac5a6641c304ceaf5932bf2c14241b7544cea78ec95a4", "5a53ddb6afec089af853264428e9ee38cfd485ebb40052fa249229f4f60a8a3c", "de2e097639dd8d5589c992c76328f31655008cc582c409af3135f26491c49b0c", "5b973efc2f3bcfcec3dd4a4f0b20043054289df0c70b33a0c6941e0c6f689200", "6b6b48de144fb04af713b2448a64d0c5f95c577b77a716b86fa690b88a8a2788", "3cfe40746002f91e4128e03922d2c2e2bd03aa56d1b8e9234644336391457027", "a61d0c7df7b38a01fdf02e91e7723023137831981a0f8fd482f352ac062fa264", "962306b39e87fe357d15755c59f48d3a5a4aa538d97474ede775afc83de0eb03", "4007be7868c659cbc01517f859763715710ddb36505d4dd7f50d6be7909f724e", "429b4ae3ab056b2570a3bbf5cd7cb612989f2ae30427408c9517df1c6426b0c4", "bfe92bddb84da8bb287feb05b8e1736d32ce608c5a71666fdb2aeed42000bb83", "e11d73338c1528325aee2c110c383859ccda834c2d82ffa314f70eda8dcfc021", "1f8afeac8bdeff4b4034f2aedb4c62a5839520062eb35069ba03d144de169985", "3553763614cff4c80099cdffbcf4f0478feff153b07c82311e97d86598e7ef37", "cbf10162ec80cb50ceb2906066598df23a10e901b1baa04fa2ab2c7fa6eebdd0", "9b0dbeeb5cc7cc7652629c939c3744555746981410d305fe88f23530a1a71042", "2f1ee18f8516d299a2284bbf0841bc8c1eef7340ee6e5f6b73ee22b894b251c2", "795c385770255222cdbb37b43086936520c79d2e614a9aa462bbe04e5c7dbf43", "0d8c7e88dd9d1b64d2a5152bb07cbb42d9286173bfc819df2096c9cdbc7339bf", "0e8cbf08ca2823076a19e1e1891c16f0cea879aa4f2644b63a11a51a55a308c5", "d32be0d8778ec5cbaff2ff002b4fc5b5d6930d63fb3c2cacfec33898dfec74bb", "4881c8d7f35ea67da3fde562371e442d10443a21a0754a980b2cf1ce13b5699a", "2abd8be909e54779aa0c4a0c9ee94d9efb74ea5c0e4f953a39506276643c58a1", "c2a6706998e2332cf8c398a3599973490a65e60ff1c9dd86debd975eeebb57fe", "b09f77b8615d6126bd36da11e21074c4311f5584a8be28d9730d47edf6e0f3fd", "47dbade127ddab501fc23b88b686149dac37f5586e285ffccaedb173fedc4c30", "cb4165f4c5e393c4cd5917a1cc6967f5644bf87298d8c102127cdc0302c5ce9c", "076a90082d3b89dad6c9c72b66ccc4bf4c1eaa6bd2ac151f2f35efdfd2d6948f", "74c2641a437d51d874e242e2ea719bbb6768db7c4798e8043ad697ef3eaf3ae2", "c1f1a5f86301a4d52429cb5d12e17ad999565261104e9bcc2f480a76e4e30579", "613732264261b3862ce591efa147f9333deef1c0a83b5be2c3c1eef9c3f30822", "34e908615f800c1800a36beeb877bcf0ce25b11442f3a4405c5514c2f6a34dc6", "a49ffe9b1ef32b699b5e01f3acc4ec1fc490a24451615e015238bce1bb6f6303", "6bf9e7c22b8c5a033a9272b6d3af09c9c2af72f9cf2a6bbd1d97239c173e23ea", "5ccd78cd69b13c55626c607d7bef9bd4e3cbfeb038058db7449419001e47da3c", "197440a84bbc2b7951a956c96ca5d6fa96ee2a68b50a4d58faf97520c4a9d2a0", "3cb25411dd8b2de79f4d3d27d52cc63389cfaf1a7f7c09dae26636c26ea5c5c8", "87ffec592407e3a55614028de8833c70c524cff969f977bd48525894c3bc4d07", "b3b08452c8e0c11a6513d4e10f6cbab9bec7be1143dcc442a644adcbb9de0221", "3b8ccfdfab11aeb6b78f49d85bd6537be22650b55e26c51da0fbe3abe0d30389", "ac1081e3fdf9bc97c150052ca2c234de0e8aa7abce1fd831e2a19383451630a5", "8903c8dc6bb3f75eb0818bc0b04d0ee8f8e4045d9ba7a1edf332e4657858134d", "432764d6d0c5515aee84e8b8a0ad3392b3b4b49135ec45b55d07573df7d0e949", "64ffb8ad0c52f3098bad4b279143ec3e65b948756b08263f9b3b0ce877bded20", "1ba77ab1f28d90d72d9969597545a35d2ea8129891d9fc22ce219b7735091f41", "4ad0ae2a9f5bef1ea23b79d3018482097f31ce53fe73aac31e4be2447bec7359", "86f92e9e3352b4225cb6da3a59dab32e2833a6898481092f478ca377bb64e42b", "7d3470ba98e1311f24637146deea536d87e7e398db4c1127e17cfe8a8f8ec079", "ebaeb150da7e823d3c200b97ce6a023f3e24400089204cd8688c530b7266135d", "0cca294e4e93389f2adcac3a8ebc69a100817c23bdafdecf1d260b85457ff365", "3572918c481a9c73344d64b2be6b2f2bb5085fe1ce386ef831582b5fd3ce53bc", "0ba2fb6500b03ebbf7c7c054d94cf708a0487ecd56201f35d5da90a01ebfe487", "bdd99d6cac767160dd4bf30daac01deea90f04f9ddd8112e368600dccc527c7f", "1c1cf76decc79f4b107dd6e3a5b3c5d217eb084b540838120687b93f37fc0b75", "a6f27d6c8f3e7f5fa1bf7419c9c6dab3ff12268eaa1079765e24fba715e61652", "a39de8c6ce4129e0cc213f7846d469884079dbd0e2cf6cb2c8841ab52632833b", "d3d62e69efdb6cb8faff9e42261ef5492a891c49e4452b9988e789c4c6b70569", "cdbfd562245a4aef8968ce5f253a8d695d90d797b06c83c331bc88a90216685b", "06e9ca387feaf8fb64ce2bd1b7e59ba93c6f0dfa67520e197f03cdd1bcb818f4", "59dcf77f8acde88bc9fbbacf1f01012080234108f38ce3455fb8faa7f3c161f4", "ead71c0d3098f17e10d548a206156c407b3bd054096d70516ee81e6a9ff38857", "b2521cb2c3debe4d3036bebdc9bb3ddfeee40374843b1cc7fc4681063e223d04", "17a451c8d44807ccd43ad0b538f3d6b1d8a3124728dddac99642295326beef1d", "fe5bb66c5283cc013f69149b3feb7ea219b2eab5b935b24c2f273fd4db4a313b", "1b325d9036e4edfd95a6c1f9ef5b24e5f008ac94de3572a345cd521e085ef66e", "afb259eb7db1da9fb83e1259f592f87dc7125878267f108c4e52c578b11b06c4", "9019f1121f791cf90dbebda85eb0cee1a25cda5202bd7ec038d5bdd9d040683f", "ac91f7e0c8cf8d79676750f898bba454574a9d312294d6be2671be8d5bfe04ee", "41bd3069fc8fd0ce43c3e3586277d9c843dd22fbf1a132fc55ae3c1328f483c5", "89b7d6c8ce00e9bd3d293dd5ea5f26b3cec3eb20035afa452402af2fc05c663b", "e112f5c25a5f97c717b7982594886048962408102088aee69dae6ef46830fa36", "fabc320fa23fc9e957c5e234b6e456e911bd0015985aa97a34a3b92422bbd1a2", "a19fd1bcf1695d237adb8c117212fee64e7162d79023bcb2a3c901a4d0913d77", "36028ab22fb78479a6e92a013ab35edeb0c13ba892984f6a1d1073b516e3742d", "677ea4ecf2f4d5432cb8b1461d08d48fc54a83511d4b86f36da9dad91d97f6fb", "92ba6253f18b34e1ad80f1eed51cfa89a9ecbd13c5d6582f74d15d840c949a0b", "4f10f0c076241ae4514b78a0ac30ca775794127507d84d006ed6f0f3e9dbc2ff", "e63bf094dad7264725e92bf6b6008cfa7ae08c167c93aafb8c11211c03f1da28", "784b80bab08ea3374f8b3107598176b8032d69f56c08d9d39a5b7ddf9747c86a", "c9dff1b19906b3bf3d7989905d48e71f455f113cedb046954c1e197132e859b0", "402154d1ea8ac1f4d1b66ba2c68405f507fb81f2d546abcd213680d21231d4ec", "9ca6b47801a1e91d1ab30c07c55cf3976355b864db37567ad9e72a84640590ba", "b5a4913e6a4f54a244646deb0687bb575095ade23c35c47af853a2c974149244", "3cd7d66479373a2f46ae78745b39aa83498b3e71a51ef7f0988186f1016af22d", "888f443edf9284c7eff2ea4d818b299327046ef7ae35ca9d5fa46b3f5c99f9c4", "7e2249582f1592076f43dd5d0827f98bbd5cea91fbf27111a6a04940a9a4d8a7", "3558c36822307839919f51ac2767cfc99c1f06f0a3df133d6e492331b234ab84", "4e82ba9efbf58f464fbf8b38af33d0964b6f41e75a3ad5bb08cb4a6755c0312d", "eda60d15c337306bd37fd9ea3b0286ad2ea9e1abb40ac2eb508ae83ba6a100ba", "7cf62d22b56b604a948b9c3e48ae51d70dc8620a64b21570960f9c4ac4dbcf24", "2b0a72ac388134ddd23b66884c208a5a7777e9b4a289415e85229f406a79bfa2", "cb45bc765d1928bc90d7d461ef67152eafe65da5561cfc20b770bf1a2d4890dd", "a8364b24cab6d252aedb19ce92a7dacc7236e0f2549f7b2d9e56804ecd1160ec", "f26657f70739ec72ff7069d587356e8ca3db1dd2ad4e60ac8038cbe6a31091d4", "818255a285fcf4da111576e580313ab0066b8f511ecda9e09c9e30541a600730", "8ab21b28c5d4438145e5695884d0e4ade36142265f6c85b0214bc4c4e947b12c", "23cd36d07b0df4a271675e0c2603c635ea9cf6c6465ff508e85058b18152a99b"];
+  var UK='gym_blue_glass_unlock_v1';
+  var ov=document.getElementById('lock'),inp=document.getElementById('lockinp'),msg=document.getElementById('lockmsg');
+  function ok(h){return HASHES.indexOf(h)>-1}
+  function unlock(){ov.style.display='none'}
+  function sha(s){
+    var b=new TextEncoder().encode(s);
+    return crypto.subtle.digest('SHA-256',b).then(function(d){
+      return Array.prototype.map.call(new Uint8Array(d),function(x){return ('0'+x.toString(16)).slice(-2)}).join('');
+    });
+  }
+  var saved=null;try{saved=localStorage.getItem(UK)}catch(e){}
+  if(saved&&ok(saved)){unlock();return}
+  function tryCode(){
+    var code=inp.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(code.length!==12){msg.textContent='الكود غير مكتمل';return}
+    if(!window.crypto||!crypto.subtle){msg.textContent='افتح الرابط من متصفح Chrome';return}
+    sha(code).then(function(h){
+      if(ok(h)){try{localStorage.setItem(UK,h)}catch(e){}unlock()}
+      else msg.textContent='الكود غير صحيح، تأكد منه وحاول مرة أخرى';
+    }).catch(function(){msg.textContent='تعذر التحقق، افتح الرابط من متصفح Chrome'});
+  }
+  document.getElementById('lockbtn').addEventListener('click',tryCode);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')tryCode()});
+})();
+</script></body></html>
